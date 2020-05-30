@@ -56,6 +56,7 @@ def train(model, trainloader, testloader, criterion, optimizer, epochs=in_arg.ep
     :param epochs: number of study epochs
     :param device: the device to be used in the training process (gpu or cpu)
     """
+    model = model.to(device)
     running_loss = 0
     start = time.time()
     for e in range(epochs):
@@ -106,10 +107,11 @@ def model_testing(model, trainloader, testloader, criterion, optimizer, device=i
     :param optimizer: the backpropagation optimizer
     :param device: the device to be used in the testing process (gpu or cpu)
     """
+    model = model.to(device)
     steps = 0
     running_loss = 0
     print_every = 5
-
+    
     for inputs, labels in trainloader:
         steps += 1
         inputs, labels = inputs.to(device), labels.to(device)
@@ -155,7 +157,7 @@ def predict(image_path, model, device=in_arg.gpu,  topk=in_arg.top_k):
     """
 
     model.eval()
-
+    
     with torch.no_grad():
         image = process_image(image_path)
         image = torch.FloatTensor([image])

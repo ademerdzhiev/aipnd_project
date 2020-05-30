@@ -41,7 +41,7 @@ def args_input():
     # Create Parse using ArgumentParser
     parser = argparse.ArgumentParser()
 
-    parser.add_argument('image_path', default='./flowers/test/1/image_06743.jpg', nargs='?', action="store",
+    parser.add_argument('image_path', default='./flowers/test/11/image_03115.jpg', nargs='?', action="store",
                          help='path to the image we want to process with predict.py')
 
     parser.add_argument('checkpoint', default='./checkpoint.pth', nargs='?', action="store",
@@ -73,13 +73,18 @@ def args_input():
     parser.add_argument('--epochs', type=int, default=24,
                         help='the number of epochs')
 
-    parser.add_argument('--gpu', type=str, default='cpu', help='using GPU for training')
+    parser.add_argument('--gpu', action="store_true", default=False, help='using GPU for training')
 
     args = parser.parse_args()
 
     if args.gpu:
         device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         args.gpu = device
-        print('using {} for training'.format(device))
+        print('using {}'.format(device))
+    else:
+        args.gpu = "cpu"
+        device = args.gpu
+        print('using {}'.format(device))
+
 
     return args

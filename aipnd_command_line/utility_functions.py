@@ -89,7 +89,7 @@ def display_image(probs, labels, img_path):
     """
     # cropping image to have the desired size of 256x256
     img = plt.imread(img_path)
-    img = resize(img, (256, 256), mode='constant', anti_aliasing=False)
+    img = resize(img, (256, 256), mode='constant')
     new_height1 = int(img.shape[0] / 2 - 224 / 2)
     new_height2 = int(img.shape[0] / 2 + 224 / 2)
     new_width1 = int(img.shape[1] / 2 - 224 / 2)

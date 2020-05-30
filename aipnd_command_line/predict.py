@@ -30,12 +30,13 @@ def main():
             labels.append(cat_to_name[str(index[n])])
 
         print(labels)
-        display_image(probs, labels, img_path)
-
+        # uncomment the line below to display the image and to plot the top k probabilities
+        # display_image(probs, labels, img_path)
 
     else:
         print(index)
-        display_image(probs, index, img_path)
+       # uncomment the line below to display the image and to plot the top k probabilities
+       # display_image(probs, index, img_path)
 
 
 if __name__== "__main__":

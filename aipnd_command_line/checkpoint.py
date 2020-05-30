@@ -43,8 +43,12 @@ def load_checkpoint(filepath):
     Loads the saved model.
     :param filepath: the path to the saved checkpoint
     :return: tuple containing the trained model and the optimizer
-    """
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    """      
+    if in_arg.gpu == 'cuda':
+        device='cuda:0'
+    else:
+        device='cpu'
+    
     learning_rate = in_arg.learning_rate
     checkpoint = torch.load(filepath, map_location=device)
     model = getattr(models, checkpoint['arch'])(pretrained=True)
@@ -55,5 +59,6 @@ def load_checkpoint(filepath):
     model.load_state_dict(checkpoint['model_state'])
     optimizer.load_state_dict(checkpoint['optimizer'])
     model.class_to_idx = checkpoint['class_to_idx']
+    model.to(device)
 
     return model, optimizer
