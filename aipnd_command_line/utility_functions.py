@@ -1,19 +1,28 @@
 # PROGRAMMER: Angel
 # DATE CREATED: 25.05.2020
-# REVISED DATE: 26.05.2020
+# REVISED DATE: 30.05.2020
+# PURPOSE: Create a functions for preparing the data for processing, processing and displaying images
+#
 
 import torch
 import torchvision
 from torchvision import transforms
 import numpy as np
 from input_args import args_input
-import json
 import matplotlib.pyplot as plt
 from skimage.transform import resize
 from PIL import Image
 
 
 def dataloader_datasets():
+    """
+        1. Gets the folders where the training, validation and testing data is located.
+        2. Torchvision transforms are used to augment the training data with random scaling,
+            rotations, mirroring, and/or cropping.
+        3. The training, validation, and testing data is appropriately cropped and normalized.
+        4. The data for each set (train, validation, test) is loaded with torchvision's ImageFolder.
+        5. The data for each set is loaded with torchvision's DataLoader.
+    """
     in_arg = args_input()
     data_dir = in_arg.dir
     train_dir = data_dir + '/train'
@@ -52,9 +61,11 @@ def dataloader_datasets():
 
 
 def process_image(image):
-    ''' Scales, crops, and normalizes a PIL image for a PyTorch model,
-        returns an Numpy array
-    '''
+    """
+    Scales, crops, and normalizes a PIL image for a PyTorch model.
+    :param image: the image to be processed
+    :return: Numpy array
+    """
     mean = np.array([0.485, 0.456, 0.406])
     std = np.array([0.229, 0.224, 0.225])
 
@@ -69,7 +80,13 @@ def process_image(image):
 
 
 def display_image(probs, labels, img_path):
-
+    """
+    A matplotlib figure is created displaying an image and its associated top k most
+    probable classes with actual flower names.
+    :param probs: a list with the top k probabilities
+    :param labels: a list with the top k labels
+    :param img_path: path to the image to be displayed
+    """
     # cropping image to have the desired size of 256x256
     img = plt.imread(img_path)
     img = resize(img, (256, 256), mode='constant', anti_aliasing=False)

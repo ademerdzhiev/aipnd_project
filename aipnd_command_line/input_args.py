@@ -1,10 +1,8 @@
 # PROGRAMMER: Angel
 # DATE CREATED: 24.05.2020
 # REVISED DATE: 26.05.2020
-# PURPOSE: Create a function that retrieves the following 3 command line inputs
-#          from the user using the Argparse Python module. If the user fails to
-#          provide some or all of the 3 inputs, then the default values are
-#          used for the missing inputs. Command Line Arguments:
+# PURPOSE: Create a function that retrieves command line inputs from the user using
+#          the Argparse Python module.
 
 import argparse
 import torch
@@ -18,10 +16,21 @@ def args_input():
        the user fails to provide some or all of the arguments, then the default
        values are used for the missing arguments.
        Command Line Arguments:
+
+        To be passed to train.py:
          1. Set directory to save checkpoints as --save_dir save_directory
-         2. CNN Model Architecture as --arch "vgg13"
-         3. Set hyperparameters as  --learning_rate 0.01 --hidden_units 512 --epochs 20
+         2. CNN Model Architecture as --arch 'vgg19'
+         3. Set hyperparameters as  --learning_rate 0.0001 --hidden_units 512 --epochs 24
          4. Use GPU for training as --gpu
+         5. Dropout as --drop_out 0.3
+
+        To be passed to predict.py:
+         6. top k classes as --top_k 5
+         7. the category names as --category names
+         8. loading saved model as checkpoint './checkpoint.pth'
+         9. image path to image in order to predict to which class it belongs
+            image_path './flowers/test/1/image_06743.jpg'
+
        This function returns these arguments as an ArgumentParser object.
        Parameters:
         None - simply using argparse module to create & store command line arguments
@@ -41,7 +50,8 @@ def args_input():
     parser.add_argument('--top_k', type=int, default=5,
                          help='the top K most likely classes')
 
-    parser.add_argument('--category_names', default='', type=str, action='store')
+    parser.add_argument('--category_names', default='', type=str, action='store',
+                         help='the names of the categories/flowers')
 
     parser.add_argument('--dir', type=str, default='flowers/',
                         help='path to the data folder')

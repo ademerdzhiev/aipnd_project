@@ -1,14 +1,13 @@
 # PROGRAMMER: Angel
 # DATE CREATED: 25.05.2020
 # REVISED DATE: 26.05.2020
+# PURPOSE: Predicts the top k classes for a given image and displays it.
+
 from model_fc import predict
 from checkpoint import load_checkpoint
 from input_args import args_input
 from utility_functions import display_image
 import json
-import matplotlib.pyplot as plt
-from skimage.transform import resize
-from PIL import Image
 
 
 args = args_input()

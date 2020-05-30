@@ -1,6 +1,8 @@
 # PROGRAMMER: Angel
 # DATE CREATED: 24.05.2020
-# REVISED DATE: 26.05.2020
+# REVISED DATE: 30.05.2020
+# PURPOSE: Create a functions for preparing the data for processing, processing and displaying images
+
 
 import torch
 from torch import nn
@@ -12,6 +14,15 @@ from utility_functions import process_image
 in_arg = args_input()
 
 def classifier(input_size, output_size=102, hidden_layers_=in_arg.hidden_units, drop_p=in_arg.drop_out):
+    """
+    Feedforward network is defined for use as a classifier using the features as input. An ordered list containing
+    each layer of the network is created. Then it is passed to the
+    :param input_size: the input size for the classifier
+    :param output_size: the number of output classes
+    :param hidden_layers_: a list with the hidden layers of the classifier
+    :param drop_p: the dropout parameter
+    :return: returns a classifier to be applied to the pretrained network.
+    """
     hidden_layers = [int(hidden_layers_[s]) for s in range(len(hidden_layers_))]
 
     sequential_list = []
@@ -35,6 +46,16 @@ def classifier(input_size, output_size=102, hidden_layers_=in_arg.hidden_units, 
 
 
 def train(model, trainloader, testloader, criterion, optimizer, epochs=in_arg.epochs, device=in_arg.gpu):
+    """
+    The training function
+    :param model: passing a pretrained model
+    :param trainloader: training data set
+    :param testloader: testing data set
+    :param criterion: the loss criterion
+    :param optimizer: the backpropagation optimizer
+    :param epochs: number of study epochs
+    :param device: the device to be used in the training process (gpu or cpu)
+    """
     running_loss = 0
     start = time.time()
     for e in range(epochs):
@@ -75,47 +96,16 @@ def train(model, trainloader, testloader, criterion, optimizer, epochs=in_arg.ep
     print(f"Time per batch: {(time.time() - start) / 3:.3f} seconds")
 
 
-def validation(model, trainloader, validloader, criterion, optimizer, device=in_arg.gpu):
-    steps = 0
-    running_loss = 0
-    print_every = 5
-
-    for inputs, labels in trainloader:
-        steps += 1
-        inputs, labels = inputs.to(device), labels.to(device)
-        optimizer.zero_grad
-
-        log_ps = model.forward(inputs)
-        loss = criterion(log_ps, labels)
-        loss.backward()
-        optimizer.step()
-        running_loss += loss.item()
-
-        if steps % print_every == 0:
-            test_loss = 0
-            accuracy = 0
-            model.eval()
-
-            with torch.no_grad():
-                for inputs, labels in validloader:
-                    inputs, labels = inputs.to(device), labels.to(device)
-                    log_ps = model.forward(inputs)
-                    test_loss += criterion(log_ps, labels).item()
-
-                    ps = torch.exp(log_ps)
-                    top_p, top_class = ps.topk(1, dim=1)
-                    equals = top_class == labels.view(*top_class.shape)
-                    accuracy += torch.mean(equals.type(torch.FloatTensor)).item()
-
-                print(f"Steps {steps}.. "
-                      f"Train loss: {running_loss / print_every:.3f}.. "
-                      f"Test loss: {test_loss / len(validloader):.3f}.. "
-                      f"Test accuracy: {accuracy / len(validloader):.3f}")
-                running_loss = 0
-                model.train()
-
-
 def model_testing(model, trainloader, testloader, criterion, optimizer, device=in_arg.gpu):
+    """
+    The testing function - shows how well the trained model performs on a unknown data set - testing data set
+    :param model: passing the already trained model
+    :param trainloader: training data set
+    :param testloader: testing data set
+    :param criterion: the loss criterion
+    :param optimizer: the backpropagation optimizer
+    :param device: the device to be used in the testing process (gpu or cpu)
+    """
     steps = 0
     running_loss = 0
     print_every = 5
@@ -156,8 +146,13 @@ def model_testing(model, trainloader, testloader, criterion, optimizer, device=i
 
 
 def predict(image_path, model, device=in_arg.gpu,  topk=in_arg.top_k):
-    ''' Predict the class (or classes) of an image using a trained deep learning model.
-    '''
+    """
+    Predict the class (or classes) of an image using a trained deep learning model.
+    :param image_path: path to the image to be predicted
+    :param model: passing the already trained model
+    :param device: the device to be used in the prediction process (gpu or cpu)
+    :param topk: the number of top classes (classes with biggest probability) to which the image belongs to
+    """
 
     model.eval()
 

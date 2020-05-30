@@ -1,6 +1,7 @@
 # PROGRAMMER: Angel
 # DATE CREATED: 24.05.2020
 # REVISED DATE: 26.05.2020
+# PURPOSE: Trains a pretrained model, saves a checkpoint and tests how it performs on a unknown data set
 
 from torch import nn
 from torch import optim
